@@ -1,3 +1,48 @@
+// Current logged-in user
+const currentUser = JSON.parse(
+    localStorage.getItem("campusLoggedInUser")
+);
+
+
+// Create a separate storage key for each student
+function getIssuesKey() {
+
+    return `campusIssues_${currentUser.studentId}`;
+
+}
+
+// Migrate old issues to the current student's storage
+
+function migrateOldIssues() {
+
+    const oldIssues = localStorage.getItem("campusIssues");
+
+    if (!oldIssues) {
+        return;
+    }
+
+
+    const newKey = getIssuesKey();
+
+
+    // Only migrate if this student doesn't already have issues
+
+    if (!localStorage.getItem(newKey)) {
+
+        localStorage.setItem(newKey, oldIssues);
+
+    }
+
+
+    // Remove old global storage
+
+    localStorage.removeItem("campusIssues");
+
+}
+
+migrateOldIssues();
+
+
 const reportBtn = document.getElementById("reportBtn");
 const reportModal = document.getElementById("reportModal");
 const closeModal = document.getElementById("closeModal");
@@ -15,7 +60,10 @@ const resolvedIssues = document.getElementById("resolvedIssues");
 // ==========================================
 
 function getIssues() {
-    const savedIssues = localStorage.getItem("campusIssues");
+
+    const savedIssues = localStorage.getItem(
+        getIssuesKey()
+    );
 
     if (savedIssues) {
         return JSON.parse(savedIssues);
@@ -30,8 +78,9 @@ function getIssues() {
 // ==========================================
 
 function saveIssues(issues) {
+
     localStorage.setItem(
-        "campusIssues",
+        getIssuesKey(),
         JSON.stringify(issues)
     );
 }
@@ -253,8 +302,7 @@ issueForm.addEventListener("submit", function (event) {
 
     const newIssue = {
 
-        id: 1000 + issues.length + 1,
-
+        id: Date.now(),
         category: category,
 
         location: location,
