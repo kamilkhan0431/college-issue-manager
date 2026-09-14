@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CampusFix</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="top-bar">
+        <div>
+            <h1>CampusFix</h1>
+            <p>College Issue Management</p>
+        </div>
+
+        <button class="profile-btn">K</button>
+    </header>
+
+
+    <main>
+
+        <!-- Greeting -->
+        <section class="welcome">
+            <p>Good morning 👋</p>
+            <h2>How can we help you?</h2>
+        </section>
+
+
+        <!-- Report Issue -->
+        <section class="report-card">
+            <div class="report-icon">+</div>
+
+            <div>
+                <h3>Report an Issue</h3>
+                <p>Found something that needs attention?</p>
+            </div>
+
+            <button id="reportBtn">Report</button>
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <span class="stat-number" id="totalIssues">3</span>
+                <span>Total</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-number" id="activeIssues">2</span>
+                <span>Active</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-number" id="resolvedIssues">1</span>
+                <span>Resolved</span>
+            </div>
+
+        </section>
+
+
+        <!-- Recent Issues -->
+        <section class="issues-section">
+
+            <div class="section-heading">
+                <h2>My Issues</h2>
+
+                <button id="viewAllBtn">
+                    View all
+                </button>
+            </div>
+
+
+            <div id="issuesContainer">
+
+                <article class="issue-card">
+
+                    <div class="issue-top">
+                        <span class="issue-category">Infrastructure</span>
+                        <span class="status in-progress">
+                            In Progress
+                        </span>
+                    </div>
+
+                    <h3>Projector not working</h3>
+
+                    <p class="location">
+                        📍 CSE Lab 204
+                    </p>
+
+                    <div class="issue-bottom">
+                        <span>Issue #1047</span>
+                        <span>14 Sep</span>
+                    </div>
+
+                </article>
+
+
+                <article class="issue-card">
+
+                    <div class="issue-top">
+                        <span class="issue-category">Electrical</span>
+                        <span class="status pending">
+                            Pending
+                        </span>
+                    </div>
+
+                    <h3>Ceiling fan making noise</h3>
+
+                    <p class="location">
+                        📍 Room 302
+                    </p>
+
+                    <div class="issue-bottom">
+                        <span>Issue #1046</span>
+                        <span>13 Sep</span>
+                    </div>
+
+                </article>
+
+
+                <article class="issue-card">
+
+                    <div class="issue-top">
+                        <span class="issue-category">Cleanliness</span>
+                        <span class="status resolved">
+                            Resolved
+                        </span>
+                    </div>
+
+                    <h3>Dustbin overflowing</h3>
+
+                    <p class="location">
+                        📍 Block B
+                    </p>
+
+                    <div class="issue-bottom">
+                        <span>Issue #1045</span>
+                        <span>12 Sep</span>
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Bottom Navigation -->
+
+    <nav class="bottom-nav">
+
+        <button class="nav-item active">
+            <span>⌂</span>
+            <small>Home</small>
+        </button>
+
+        <button class="nav-item">
+            <span>▣</span>
+            <small>My Issues</small>
+        </button>
+
+        <button class="nav-item">
+            <span>👤</span>
+            <small>Profile</small>
+        </button>
+
+    </nav>
+
+
+    <!-- Report Issue Modal -->
+
+    <div class="modal hidden" id="reportModal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2>Report an Issue</h2>
+
+                <button id="closeModal">
+                    ×
+                </button>
+            </div>
+
+
+            <form id="issueForm">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select id="category" required>
+
+                    <option value="">
+                        Select category
+                    </option>
+
+                    <option value="Electrical">
+                        Electrical
+                    </option>
+
+                    <option value="Infrastructure">
+                        Infrastructure
+                    </option>
+
+                    <option value="Cleanliness">
+                        Cleanliness
+                    </option>
+
+                    <option value="Internet">
+                        Internet / Wi-Fi
+                    </option>
+
+                    <option value="Laboratory">
+                        Laboratory
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+
+                <label for="location">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    placeholder="e.g. CSE Lab 204"
+                    required
+                >
+
+
+                <label for="title">
+                    Issue title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="e.g. Projector not working"
+                    required
+                >
+
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    rows="4"
+                    placeholder="Describe the issue..."
+                    required
+                ></textarea>
+
+
+                <label for="priority">
+                    Priority
+                </label>
+
+                <select id="priority" required>
+
+                    <option value="">
+                        Select priority
+                    </option>
+
+                    <option value="Low">
+                        Low
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="High">
+                        High
+                    </option>
+
+                </select>
+
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Submit Issue
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Complaint Details Modal -->
+
+<div class="details-modal hidden" id="detailsModal">
+
+    <div class="details-content">
+
+        <div class="details-header">
+
+            <div>
+                <p class="details-label">Complaint Details</p>
+                <h2 id="detailsTitle">Projector not working</h2>
+            </div>
+
+            <button id="closeDetails">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="details-status-row">
+
+            <span id="detailsStatus" class="status pending">
+                Pending
+            </span>
+
+            <span id="detailsPriority" class="priority-badge">
+                High Priority
+            </span>
+
+        </div>
+
+
+        <div class="details-info">
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Issue ID
+                </span>
+
+                <span id="detailsId">
+                    #1001
+                </span>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Location
+                </span>
+
+                <span id="detailsLocation">
+                    📍 CSE Lab 204
+                </span>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Category
+                </span>
+
+                <span id="detailsCategory">
+                    Infrastructure
+                </span>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Reported
+                </span>
+
+                <span id="detailsDate">
+                    14/09/2026
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="details-description">
+
+            <h3>Description</h3>
+
+            <p id="detailsDescription">
+                The projector is not turning on.
+            </p>
+
+        </div>
+
+
+        <!-- Status Timeline -->
+
+        <div class="timeline">
+
+            <h3>Progress</h3>
+
+
+            <div class="timeline-item completed">
+
+                <div class="timeline-dot"></div>
+
+                <div>
+                    <strong>Issue Reported</strong>
+                    <p>Your issue has been submitted.</p>
+                </div>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <div class="timeline-dot"></div>
+
+                <div>
+                    <strong>Under Review</strong>
+                    <p>Waiting for faculty review.</p>
+                </div>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <div class="timeline-dot"></div>
+
+                <div>
+                    <strong>In Progress</strong>
+                    <p>Issue is being worked on.</p>
+                </div>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <div class="timeline-dot"></div>
+
+                <div>
+                    <strong>Resolved</strong>
+                    <p>Issue has been resolved.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
