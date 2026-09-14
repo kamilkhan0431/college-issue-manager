@@ -447,6 +447,18 @@ const profileStudentId = document.getElementById("profileStudentId");
 const profileCollegeEmail = document.getElementById("profileCollegeEmail");
 const profileAvatar = document.getElementById("profileAvatar");
 
+const homeProfileAvatar =
+    document.getElementById("homeProfileAvatar");
+
+
+// Set Home Profile Avatar
+if (currentUser && homeProfileAvatar) {
+
+    homeProfileAvatar.textContent =
+        currentUser.name.charAt(0).toUpperCase();
+
+}
+
 
 // Open Profile
 profileBtn.addEventListener("click", () => {
