@@ -272,7 +272,7 @@ function updateStatistics(issues) {
 // SUBMIT ISSUE
 // ==========================================
 
-issueForm.addEventListener("submit", function (event) {
+issueForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
@@ -293,61 +293,97 @@ issueForm.addEventListener("submit", function (event) {
         document.getElementById("priority").value;
 
 
-    // Get existing issues
+    try {
 
-    const issues = getIssues();
+        const response = await fetch(
+            "http://localhost:5000/api/issues",
+            {
+                method: "POST",
 
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-    // Create new issue
+                body: JSON.stringify({
 
-    const newIssue = {
+                    studentId: currentUser.student_id,
 
-        id: Date.now(),
-        category: category,
+                    category: category,
 
-        location: location,
+                    location: location,
 
-        title: title,
+                    title: title,
 
-        description: description,
+                    description: description,
 
-        priority: priority,
+                    priority: priority
 
-        status: "Pending",
-
-        date: new Date().toLocaleDateString("en-IN")
-
-    };
-
-
-    // Add new issue
-
-    issues.unshift(newIssue);
+                })
+            }
+        );
 
 
-    // Save
-
-    saveIssues(issues);
+        const data = await response.json();
 
 
-    // Update UI
+        if (!response.ok) {
 
-    displayIssues();
+            alert(data.message);
+            return;
 
-
-    // Reset form
-
-    issueForm.reset();
+        }
 
 
-    // Close modal
+        // Issue successfully saved in PostgreSQL
 
-    reportModal.classList.add("hidden");
+        const savedIssue = data.issue;
 
 
-    // Success message
+        // Convert database date into the format
+        // the existing UI already expects
 
-    alert("Issue submitted successfully!");
+        savedIssue.date =
+            new Date(savedIssue.created_at)
+                .toLocaleDateString("en-IN");
+
+
+        // Add the new issue temporarily to the
+        // existing UI
+
+        const issues = getIssues();
+
+        issues.unshift(savedIssue);
+
+        saveIssues(issues);
+
+
+        // Update UI
+
+        displayIssues();
+
+
+        // Reset form
+
+        issueForm.reset();
+
+
+        // Close modal
+
+        reportModal.classList.add("hidden");
+
+
+        // Success message
+
+        alert("Issue submitted successfully!");
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to connect to the server.");
+
+    }
 
 });
 
