@@ -1,6 +1,8 @@
 const express = require("express");
 const pool = require("./db");
 
+const authRoutes = require("./routes/authRoutes");
+
 const app = express();
 
 const PORT = 5000;
@@ -8,19 +10,10 @@ const PORT = 5000;
 
 // Middleware
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 
 
 // Test route
-app.get("/", (req, res) => {
-
-    res.json({
-        message: "CampusFix backend is running!"
-    });
-
-});
-
-
-// Database test route
 app.get("/db-test", async (req, res) => {
 
     try {
@@ -41,6 +34,13 @@ app.get("/db-test", async (req, res) => {
         });
 
     }
+
+});
+app.get("/", (req, res) => {
+
+    res.json({
+        message: "CampusFix backend is running!"
+    });
 
 });
 
