@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusFix - Login</title>
+
+    <link rel="stylesheet" href="auth.css">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <div class="brand">
+                <h1>CampusFix</h1>
+                <p>College Issue Management System</p>
+            </div>
+
+            <!-- Login -->
+            <div id="loginSection">
+
+                <h2>Welcome back</h2>
+                <p class="auth-subtitle">Login to your student account</p>
+
+                <form id="loginForm">
+
+                    <div class="input-group">
+                        <label for="loginIdentifier">
+                            College Email / Student ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="loginIdentifier"
+                            placeholder="Enter your email or student ID"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="loginPassword">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Enter your password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="auth-btn">
+                        Login
+                    </button>
+
+                </form>
+
+                <p class="switch-text">
+                    Don't have an account?
+                    <button type="button" id="showSignup">
+                        Sign up
+                    </button>
+                </p>
+
+            </div>
+
+
+            <!-- Sign Up -->
+            <div id="signupSection" class="hidden">
+
+                <h2>Create account</h2>
+                <p class="auth-subtitle">Create your student account</p>
+
+                <form id="signupForm">
+
+                    <div class="input-group">
+                        <label for="signupName">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="signupName"
+                            placeholder="Enter your full name"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="signupStudentId">
+                            Student ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="signupStudentId"
+                            placeholder="Enter your student ID"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="signupEmail">
+                            College Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="signupEmail"
+                            placeholder="Enter your college email"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="signupPassword">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="signupPassword"
+                            placeholder="Create a password"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="signupConfirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="signupConfirmPassword"
+                            placeholder="Confirm your password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="auth-btn">
+                        Create Account
+                    </button>
+
+                </form>
+
+                <p class="switch-text">
+                    Already have an account?
+                    <button type="button" id="showLogin">
+                        Login
+                    </button>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="auth.js"></script>
+
+</body>
+</html>
