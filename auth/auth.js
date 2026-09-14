@@ -49,7 +49,7 @@ function saveUsers(users) {
 
 
 // Sign Up
-signupForm.addEventListener("submit", (event) => {
+signupForm.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
@@ -60,7 +60,6 @@ signupForm.addEventListener("submit", (event) => {
     const confirmPassword = document.getElementById("signupConfirmPassword").value;
 
 
-    // Check passwords
     if (password !== confirmPassword) {
 
         alert("Passwords do not match.");
@@ -69,113 +68,116 @@ signupForm.addEventListener("submit", (event) => {
     }
 
 
-    const users = getUsers();
+    try {
+
+        const response = await fetch(
+            "http://localhost:5000/api/auth/signup",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    studentId: studentId,
+                    email: email,
+                    password: password
+                })
+            }
+        );
 
 
-    // Check duplicate student ID
-    const existingStudent = users.find(
-        user => user.studentId.toLowerCase() === studentId.toLowerCase()
-    );
+        const data = await response.json();
 
-    if (existingStudent) {
 
-        alert("A student account with this ID already exists.");
-        return;
+        if (!response.ok) {
+
+            alert(data.message);
+            return;
+
+        }
+
+
+        localStorage.setItem(
+            "campusLoggedInUser",
+            JSON.stringify(data.user)
+        );
+
+
+        alert("Account created successfully.");
+
+        window.location.href = "../index.html";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to connect to the server.");
 
     }
-
-
-    // Check duplicate email
-    const existingEmail = users.find(
-        user => user.email.toLowerCase() === email.toLowerCase()
-    );
-
-    if (existingEmail) {
-
-        alert("An account with this email already exists.");
-        return;
-
-    }
-
-
-    // Create user
-    const newUser = {
-
-        id: Date.now(),
-
-        name: name,
-
-        studentId: studentId,
-
-        email: email,
-
-        password: password
-
-    };
-
-
-    users.push(newUser);
-
-    saveUsers(users);
-
-
-    // Create login session
-    localStorage.setItem("campusLoggedInUser", JSON.stringify(newUser));
-
-
-    alert("Account created successfully.");
-
-    window.location.href = "../index.html";
 
 });
 
 
 // Login
-loginForm.addEventListener("submit", (event) => {
+loginForm.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
     const identifier = document
         .getElementById("loginIdentifier")
         .value
-        .trim()
-        .toLowerCase();
+        .trim();
 
     const password = document
         .getElementById("loginPassword")
         .value;
 
 
-    const users = getUsers();
+    try {
+
+        const response = await fetch(
+            "http://localhost:5000/api/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    identifier: identifier,
+                    password: password
+                })
+            }
+        );
 
 
-    const user = users.find(user =>
-
-        (
-            user.email.toLowerCase() === identifier ||
-            user.studentId.toLowerCase() === identifier
-        )
-
-        && user.password === password
-
-    );
+        const data = await response.json();
 
 
-    if (!user) {
+        if (!response.ok) {
 
-        alert("Invalid email/student ID or password.");
-        return;
+            alert(data.message);
+            return;
+
+        }
+
+
+        localStorage.setItem(
+            "campusLoggedInUser",
+            JSON.stringify(data.user)
+        );
+
+
+        window.location.href = "../index.html";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to connect to the server.");
 
     }
-
-
-    // Create session
-    localStorage.setItem(
-        "campusLoggedInUser",
-        JSON.stringify(user)
-    );
-
-
-    window.location.href = "../index.html";
 
 });
