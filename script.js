@@ -387,3 +387,80 @@ detailsModal.addEventListener("click", function (event) {
 
 });
 
+// Profile
+
+const profileBtn = document.querySelector(".profile-btn");
+const profileModal = document.getElementById("profileModal");
+const closeProfile = document.getElementById("closeProfile");
+
+const profileName = document.getElementById("profileName");
+const profileEmail = document.getElementById("profileEmail");
+const profileStudentId = document.getElementById("profileStudentId");
+const profileCollegeEmail = document.getElementById("profileCollegeEmail");
+const profileAvatar = document.getElementById("profileAvatar");
+
+
+// Open Profile
+profileBtn.addEventListener("click", () => {
+
+    const loggedInUser = JSON.parse(
+        localStorage.getItem("campusLoggedInUser")
+    );
+
+    if (!loggedInUser) {
+        window.location.href = "auth/login.html";
+        return;
+    }
+
+
+    // Show exact signup information
+    profileName.textContent = loggedInUser.name;
+
+    profileEmail.textContent = loggedInUser.email;
+
+    profileStudentId.textContent = loggedInUser.studentId;
+
+    profileCollegeEmail.textContent = loggedInUser.email;
+
+
+    // First letter of user's name
+    profileAvatar.textContent =
+        loggedInUser.name.charAt(0).toUpperCase();
+
+
+    profileModal.classList.add("active");
+
+});
+
+
+// Close Profile
+closeProfile.addEventListener("click", () => {
+
+    profileModal.classList.remove("active");
+
+});
+
+
+// Close Profile when clicking outside the modal
+profileModal.addEventListener("click", (event) => {
+
+    if (event.target === profileModal) {
+
+        profileModal.classList.remove("active");
+
+    }
+
+});
+
+
+// Logout
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+logoutBtn.addEventListener("click", () => {
+
+    localStorage.removeItem("campusLoggedInUser");
+
+    window.location.href = "auth/login.html";
+
+});

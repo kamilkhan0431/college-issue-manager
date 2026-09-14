@@ -442,6 +442,49 @@
 
 </div>
 
+<!-- Profile Modal -->
+<div class="modal" id="profileModal">
+
+    <div class="modal-content profile-content">
+
+        <div class="modal-header">
+            <h2>My Profile</h2>
+            <button class="close-btn" id="closeProfile">&times;</button>
+        </div>
+
+        <div class="profile-info">
+
+            <div class="profile-avatar" id="profileAvatar">
+                K
+            </div>
+
+            <h3 id="profileName">Student Name</h3>
+            <p id="profileEmail">student@email.com</p>
+
+            <div class="profile-details">
+
+                <div class="profile-detail">
+                    <span>Student ID</span>
+                    <strong id="profileStudentId">---</strong>
+                </div>
+
+                <div class="profile-detail">
+                    <span>College Email</span>
+                    <strong id="profileCollegeEmail">---</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="logout-btn" id="logoutBtn">
+            Log Out
+        </button>
+
+    </div>
+
+</div>
+
     <script>
     const loggedInUser = localStorage.getItem("campusLoggedInUser");
 
