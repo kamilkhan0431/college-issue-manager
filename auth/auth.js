@@ -1,3 +1,9 @@
+const loggedInUser = localStorage.getItem("campusLoggedInUser");
+
+if (loggedInUser) {
+    window.location.href = "../index.html";
+}
+
 const loginSection = document.getElementById("loginSection");
 const signupSection = document.getElementById("signupSection");
 

@@ -442,7 +442,15 @@
 
 </div>
 
-    <script src="script.js"></script>
+    <script>
+    const loggedInUser = localStorage.getItem("campusLoggedInUser");
+
+    if (!loggedInUser) {
+        window.location.href = "auth/login.html";
+    }
+</script>
+
+<script src="script.js"></script>
 
 </body>
 </html>
