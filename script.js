@@ -473,8 +473,7 @@ profileBtn.addEventListener("click", () => {
 
     profileEmail.textContent = loggedInUser.email;
 
-    profileStudentId.textContent = loggedInUser.studentId;
-
+    profileStudentId.textContent = loggedInUser.student_id;
     profileCollegeEmail.textContent = loggedInUser.email;
 
 
