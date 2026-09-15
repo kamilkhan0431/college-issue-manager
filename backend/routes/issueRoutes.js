@@ -94,5 +94,38 @@ router.post("/", async (req, res) => {
 
 });
 
+// Get all issues for a student
+router.get("/student/:studentId", async (req, res) => {
+
+    try {
+
+        const { studentId } = req.params;
+
+
+        const result = await pool.query(
+            `SELECT *
+             FROM issues
+             WHERE student_id = $1
+             ORDER BY created_at DESC`,
+            [studentId]
+        );
+
+
+        res.json({
+            issues: result.rows
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server error."
+        });
+
+    }
+
+});
 
 module.exports = router;

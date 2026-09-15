@@ -4,43 +4,7 @@ const currentUser = JSON.parse(
 );
 
 
-// Create a separate storage key for each student
-function getIssuesKey() {
 
-    return `campusIssues_${currentUser.studentId}`;
-
-}
-
-// Migrate old issues to the current student's storage
-
-function migrateOldIssues() {
-
-    const oldIssues = localStorage.getItem("campusIssues");
-
-    if (!oldIssues) {
-        return;
-    }
-
-
-    const newKey = getIssuesKey();
-
-
-    // Only migrate if this student doesn't already have issues
-
-    if (!localStorage.getItem(newKey)) {
-
-        localStorage.setItem(newKey, oldIssues);
-
-    }
-
-
-    // Remove old global storage
-
-    localStorage.removeItem("campusIssues");
-
-}
-
-migrateOldIssues();
 
 
 const reportBtn = document.getElementById("reportBtn");
@@ -54,36 +18,6 @@ const totalIssues = document.getElementById("totalIssues");
 const activeIssues = document.getElementById("activeIssues");
 const resolvedIssues = document.getElementById("resolvedIssues");
 
-
-// ==========================================
-// GET SAVED ISSUES
-// ==========================================
-
-function getIssues() {
-
-    const savedIssues = localStorage.getItem(
-        getIssuesKey()
-    );
-
-    if (savedIssues) {
-        return JSON.parse(savedIssues);
-    }
-
-    return [];
-}
-
-
-// ==========================================
-// SAVE ISSUES
-// ==========================================
-
-function saveIssues(issues) {
-
-    localStorage.setItem(
-        getIssuesKey(),
-        JSON.stringify(issues)
-    );
-}
 
 
 // ==========================================
@@ -125,94 +59,140 @@ reportModal.addEventListener("click", function (event) {
 // DISPLAY ISSUES
 // ==========================================
 
-function displayIssues() {
+async function displayIssues() {
 
-    const issues = getIssues();
+    try {
 
-    issuesContainer.innerHTML = "";
-
-
-    if (issues.length === 0) {
-
-        issuesContainer.innerHTML = `
-            <div class="empty-state">
-                <p>No issues reported yet.</p>
-
-                <small>
-                    Report an issue when you find something
-                    that needs attention.
-                </small>
-            </div>
-        `;
-
-        updateStatistics(issues);
-
-        return;
-    }
+        const response = await fetch(
+            `http://localhost:5000/api/issues/student/${currentUser.student_id}`
+        );
 
 
-    issues.forEach(function (issue) {
-
-        const issueCard = document.createElement("article");
-
-        issueCard.className = "issue-card";
+        const data = await response.json();
 
 
-        issueCard.innerHTML = `
+        if (!response.ok) {
 
-            <div class="issue-top">
+            alert(data.message);
+            return;
 
-                <span class="issue-category">
-                    ${issue.category}
-                </span>
-
-                <span class="status ${getStatusClass(issue.status)}">
-                    ${issue.status}
-                </span>
-
-            </div>
+        }
 
 
-            <h3>
-                ${issue.title}
-            </h3>
+        const issues = data.issues;
 
 
-            <p class="location">
-                📍 ${issue.location}
-            </p>
+        issuesContainer.innerHTML = "";
 
 
-            <div class="issue-bottom">
+        if (issues.length === 0) {
 
-                <span>
-                    Issue #${issue.id}
-                </span>
+            issuesContainer.innerHTML = `
+                <div class="empty-state">
+                    <p>No issues reported yet.</p>
 
-                <span>
-                    ${issue.date}
-                </span>
+                    <small>
+                        Report an issue when you find something
+                        that needs attention.
+                    </small>
+                </div>
+            `;
 
-            </div>
+            updateStatistics(issues);
 
-        `;
+            return;
+        }
 
 
-        // Make card clickable
+        issues.forEach(function (issue) {
 
-        issueCard.addEventListener("click", function () {
+            // Convert PostgreSQL timestamp into
+            // the date format used by the UI
 
-            openIssueDetails(issue);
+            issue.date =
+                new Date(issue.created_at)
+                    .toLocaleDateString("en-IN");
+
+
+            const issueCard =
+                document.createElement("article");
+
+
+            issueCard.className = "issue-card";
+
+
+            issueCard.innerHTML = `
+
+                <div class="issue-top">
+
+                    <span class="issue-category">
+                        ${issue.category}
+                    </span>
+
+                    <span class="status ${getStatusClass(issue.status)}">
+                        ${issue.status}
+                    </span>
+
+                </div>
+
+
+                <h3>
+                    ${issue.title}
+                </h3>
+
+
+                <p class="location">
+                    📍 ${issue.location}
+                </p>
+
+
+                <div class="issue-bottom">
+
+                    <span>
+                        Issue #${issue.id}
+                    </span>
+
+                    <span>
+                        ${issue.date}
+                    </span>
+
+                </div>
+
+            `;
+
+
+            // Make card clickable
+
+            issueCard.addEventListener("click", function () {
+
+                openIssueDetails(issue);
+
+            });
+
+
+            issuesContainer.appendChild(issueCard);
 
         });
 
 
-        issuesContainer.appendChild(issueCard);
-
-    });
+        updateStatistics(issues);
 
 
-    updateStatistics(issues);
+    } catch (error) {
+
+        console.error(error);
+
+        issuesContainer.innerHTML = `
+            <div class="empty-state">
+                <p>Unable to load issues.</p>
+
+                <small>
+                    Please make sure the CampusFix server is running.
+                </small>
+            </div>
+        `;
+
+    }
 
 }
 
@@ -336,30 +316,9 @@ issueForm.addEventListener("submit", async function (event) {
 
         // Issue successfully saved in PostgreSQL
 
-        const savedIssue = data.issue;
+// Reload issues directly from PostgreSQL
 
-
-        // Convert database date into the format
-        // the existing UI already expects
-
-        savedIssue.date =
-            new Date(savedIssue.created_at)
-                .toLocaleDateString("en-IN");
-
-
-        // Add the new issue temporarily to the
-        // existing UI
-
-        const issues = getIssues();
-
-        issues.unshift(savedIssue);
-
-        saveIssues(issues);
-
-
-        // Update UI
-
-        displayIssues();
+await displayIssues();
 
 
         // Reset form
